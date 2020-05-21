@@ -38,6 +38,7 @@ class Board:
         self.__remove_piece__(from_location)
         self.__add_piece__(piece, to_location)
         self.move_history.append(history_item)
+        piece.moves_made += 1
 
     def __remove_piece__(self, location):
         location_x_array = self.letters[location.letter]
