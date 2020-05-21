@@ -1,7 +1,3 @@
-from piece import Piece
-from location import Location
-
-
 class HistoryItem:
 
     def __init__(self, piece, from_location, to_location):

@@ -1,4 +1,4 @@
-from move_history import HistoryItem
+from chessboard.move_history import HistoryItem
 
 
 class Board:
