@@ -1,3 +1,6 @@
+from pieces.location import Location
+
+
 class Piece:
 
     def __init__(self, colour, name, points, allowed_moves_worker):
@@ -35,3 +38,5 @@ class Piece:
             if piece_at_move is not None and piece_at_move.colour is not self.colour:
                 take_location.take = True
                 take_location.take_piece = piece_at_move
+                take_location.take_piece_location = Location(
+                    take_location.letter, take_location.number)

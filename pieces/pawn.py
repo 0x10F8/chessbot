@@ -10,6 +10,9 @@ class Pawn(Piece):
     def __init__(self, colour):
         super().__init__(colour, "Pawn", 1, self.__pawn_move_worker__)
 
+    def __str__(self):
+        return "{}P".format(str(self.colour)[0])
+
     def __move_forward__(self, current_location, board):
         moves = []
         if self.colour is Colour.WHITE:
@@ -104,14 +107,12 @@ class Pawn(Piece):
 
     def __pawn_move_worker__(self, current_location, board):
         moves = []
-        # White pawns move up
-        if self.colour is Colour.WHITE:
-            # Move forward one
-            moves += self.__move_forward__(current_location, board)
-            # If its the first move then 2 space move is possible
-            moves += self.__first_move__(current_location, board)
-            # Normal takes
-            moves += self.__normal_takes__(current_location, board)
-            # En Passant Takes
-            moves += self.__en_passant_takes__(current_location, board)
+        # Move forward one
+        moves += self.__move_forward__(current_location, board)
+        # If its the first move then 2 space move is possible
+        moves += self.__first_move__(current_location, board)
+        # Normal takes
+        moves += self.__normal_takes__(current_location, board)
+        # En Passant Takes
+        moves += self.__en_passant_takes__(current_location, board)
         return moves

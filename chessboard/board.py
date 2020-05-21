@@ -20,8 +20,8 @@ class Board:
         self.move_history = []
 
     def get_piece_at_square(self, location):
-        location_x_array = self.letters[location.letter]
-        location_y_array = self.numbers[location.number]
+        location_y_array = self.letters[location.letter]
+        location_x_array = self.numbers[location.number]
         return self.squares[location_x_array][location_y_array]
 
     def move_piece(self, piece, from_location, to_location):
@@ -41,8 +41,8 @@ class Board:
         piece.moves_made += 1
 
     def __remove_piece__(self, location):
-        location_x_array = self.letters[location.letter]
-        location_y_array = self.numbers[location.number]
+        location_y_array = self.letters[location.letter]
+        location_x_array = self.numbers[location.number]
         if self.squares[location_x_array][location_y_array] is not None:
             piece_removed = self.squares[location_x_array][location_y_array]
             self.squares[location_x_array][location_y_array] = None
@@ -51,9 +51,19 @@ class Board:
             raise Exception("There is no piece at this location.")
 
     def __add_piece__(self, piece, location):
-        location_x_array = self.letters[location.letter]
-        location_y_array = self.numbers[location.number]
+        location_y_array = self.letters[location.letter]
+        location_x_array = self.numbers[location.number]
         if self.squares[location_x_array][location_y_array] is not None:
             raise Exception("There is already a piece at this location")
         else:
             self.squares[location_x_array][location_y_array] = piece
+
+    def __str__(self):
+        board_string = ""
+        for row in self.squares:
+            board_string = " | ".join(str(square)
+                                     if square is not None else "  " for square in row) + "\n" \
+                                     + board_string
+            board_string = "-----".join("" for square in row) + "\n" + board_string
+        board_string +=  "-----".join("" for square in row) + "\n"
+        return board_string
