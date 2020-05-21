@@ -89,8 +89,8 @@ class Pawn(Piece):
                     last_move.to_location.letter)
                 left_letter = self.__get_previous_letter__(
                     last_move.to_location.letter)
-                if left_letter is current_location.letter \
-                        or right_letter is current_location.letter:
+                if left_letter == current_location.letter \
+                        or right_letter == current_location.letter:
                     take_location = Location(
                         last_move.to_location.letter, last_move.to_location.number)
                     if self.colour is Colour.WHITE:
