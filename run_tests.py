@@ -1,5 +1,6 @@
 from chessboard.board import Board
 from pieces.pawn import Pawn
+from pieces.knight import Knight
 from pieces.colour import Colour
 from pieces.location import Location
 
@@ -182,6 +183,65 @@ def pawn_en_passant_test():
     [print(item) for item in board.move_history]
 
 
+def basic_knight_test():
+    print("========================================")
+    print("Performing the basic knight movement test")
+    print("========================================")
+    board = Board()
+    white_knight = Knight(Colour.WHITE)
+    current_location = Location('b', 1)
+    board.__add_piece__(white_knight, current_location)
+    print(board)
+
+    allowed_moves = white_knight.allowed_moves(current_location, board)
+    print("For a {} {} starting at position {} the moves are:".format(
+        white_knight.colour, white_knight.name, current_location))
+    print(allowed_moves)
+
+    new_location = allowed_moves[0]
+    board.move_piece(white_knight, current_location, new_location)
+    current_location = new_location
+    print("Moved the {} to position {}".format(white_knight.name, new_location))
+    print(board)
+    print("For a {} {} at position {} the moves are:".format(
+        white_knight.colour, white_knight.name, current_location))
+    print(white_knight.allowed_moves(current_location, board))
+
+def knight_take_test():
+    print("========================================")
+    print("Performing the knight take test")
+    print("========================================")
+    board = Board()
+    white_knight = Knight(Colour.WHITE)
+    current_location = Location('b', 1)
+    board.__add_piece__(white_knight, current_location)
+
+    white_pawn = Pawn(Colour.WHITE)
+    black_pawn = Pawn(Colour.BLACK)
+
+    board.__add_piece__(white_pawn, Location('a', 3))
+    board.__add_piece__(black_pawn, Location('c', 3))
+
+    print("Added a knight and 2 pawns to the board...")
+
+    print(board)
+    allowed_moves = white_knight.allowed_moves(current_location, board)
+    print("For a {} {} starting at position {} the moves are:".format(
+        white_knight.colour, white_knight.name, current_location))
+    print(allowed_moves)
+
+    new_location = allowed_moves[0]
+    board.move_piece(white_knight, current_location, new_location)
+    current_location = new_location
+    print("Moved the {} to position {}".format(white_knight.name, new_location))
+    print(board)
+    print("For a {} {} at position {} the moves are:".format(
+        white_knight.colour, white_knight.name, current_location))
+    print(white_knight.allowed_moves(current_location, board))
+
 basic_pawn_test()
 pawn_take_test()
 pawn_en_passant_test()
+
+basic_knight_test()
+knight_take_test()
