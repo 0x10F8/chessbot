@@ -25,6 +25,11 @@ class Piece:
                 or location.number not in board.numbers.keys():
             return False
         return True
+    
+    def __remove_moves_with_current_team__(self, moves, board):
+        return [move for (move, piece) in
+                [(move, board.get_piece_at_square(move)) for move in moves]
+                if piece is None or piece.colour != self.colour]
 
     def __get_next_letter__(self, letter):
         return str(bytes([bytes(letter, 'utf-8')[0]+1]), 'utf-8')

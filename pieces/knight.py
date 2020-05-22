@@ -5,9 +5,6 @@ from pieces.piece import Piece
 
 class Knight(Piece):
 
-    en_passant_row_white = 4
-    en_passant_row_black = 5
-
     def __init__(self, colour):
         super().__init__(colour, "Knight", 3, self.__knight_move_worker__)
 
@@ -64,11 +61,6 @@ class Knight(Piece):
             move for move in moves if self.__is_valid_square__(move, board)]
 
         return moves
-
-    def __remove_moves_with_current_team__(self, moves, board):
-        return [move for (move, piece) in
-                [(move, board.get_piece_at_square(move)) for move in moves]
-                if piece is None or piece.colour != self.colour]
 
     def __knight_move_worker__(self, current_location, board):
         moves = self.__get_all_potential_moves__(current_location, board)

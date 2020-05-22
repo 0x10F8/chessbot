@@ -1,6 +1,7 @@
 from chessboard.board import Board
 from pieces.pawn import Pawn
 from pieces.knight import Knight
+from pieces.rook import Rook
 from pieces.colour import Colour
 from pieces.location import Location
 
@@ -239,9 +240,35 @@ def knight_take_test():
         white_knight.colour, white_knight.name, current_location))
     print(white_knight.allowed_moves(current_location, board))
 
+def basic_rook_test():
+    print("========================================")
+    print("Performing the basic rook movement test")
+    print("========================================")
+    board = Board()
+    piece = Rook(Colour.WHITE)
+    current_location = Location('d', 5)
+    board.__add_piece__(piece, current_location)
+    print(board)
+
+    allowed_moves = piece.allowed_moves(current_location, board)
+    print("For a {} {} starting at position {} the moves are:".format(
+        piece.colour, piece.name, current_location))
+    print(allowed_moves)
+
+    new_location = allowed_moves[0]
+    board.move_piece(piece, current_location, new_location)
+    current_location = new_location
+    print("Moved the {} to position {}".format(piece.name, new_location))
+    print(board)
+    print("For a {} {} at position {} the moves are:".format(
+        piece.colour, piece.name, current_location))
+    print(piece.allowed_moves(current_location, board))
+
 basic_pawn_test()
 pawn_take_test()
 pawn_en_passant_test()
 
 basic_knight_test()
 knight_take_test()
+
+basic_rook_test()
