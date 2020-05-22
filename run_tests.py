@@ -4,6 +4,7 @@ from pieces.knight import Knight
 from pieces.rook import Rook
 from pieces.bishop import Bishop
 from pieces.queen import Queen
+from pieces.king import King
 from pieces.colour import Colour
 from pieces.location import Location
 
@@ -378,6 +379,83 @@ def basic_queen_test():
         piece.colour, piece.name, current_location))
     print(piece.allowed_moves(current_location, board))
 
+def basic_king_test():
+    print("========================================")
+    print("Performing the basic king movement test")
+    print("========================================")
+    board = Board()
+    piece = King(Colour.WHITE)
+    current_location = Location('d', 5)
+    board.__add_piece__(piece, current_location)
+    print(board)
+
+    allowed_moves = piece.allowed_moves(current_location, board)
+    print("For a {} {} starting at position {} the moves are:".format(
+        piece.colour, piece.name, current_location))
+    print(allowed_moves)
+
+    new_location = allowed_moves[0]
+    board.move_piece(piece, current_location, new_location)
+    current_location = new_location
+    print("Moved the {} to position {}".format(piece.name, new_location))
+    print(board)
+    print("For a {} {} at position {} the moves are:".format(
+        piece.colour, piece.name, current_location))
+    print(piece.allowed_moves(current_location, board))
+
+def king_castling_test():
+    print("========================================")
+    print("Performing the king castling test")
+    print("========================================")
+    board = Board()
+    piece = King(Colour.WHITE)
+    current_location = Location('e', 1)
+    board.__add_piece__(piece, current_location)
+    board.__add_piece__(Rook(Colour.WHITE), Location('a', 1))
+    board.__add_piece__(Rook(Colour.WHITE), Location('h', 1))
+    print(board)
+
+    allowed_moves = piece.allowed_moves(current_location, board)
+    print("For a {} {} starting at position {} the moves are:".format(
+        piece.colour, piece.name, current_location))
+    print(allowed_moves)
+
+    new_location = allowed_moves[-1]
+    board.move_piece(piece, current_location, new_location)
+    current_location = new_location
+    print("Moved the {} to position {}".format(piece.name, new_location))
+    print(board)
+    print("For a {} {} at position {} the moves are:".format(
+        piece.colour, piece.name, current_location))
+    print(piece.allowed_moves(current_location, board))
+
+def king_castling_check_test():
+    print("========================================")
+    print("Performing the king castling check test")
+    print("========================================")
+    board = Board()
+    piece = King(Colour.WHITE)
+    current_location = Location('e', 1)
+    board.__add_piece__(piece, current_location)
+    board.__add_piece__(Rook(Colour.WHITE), Location('a', 1))
+    board.__add_piece__(Rook(Colour.WHITE), Location('h', 1))
+    board.__add_piece__(Rook(Colour.BLACK), Location('e', 2))
+    print(board)
+
+    allowed_moves = piece.allowed_moves(current_location, board)
+    print("For a {} {} starting at position {} the moves are:".format(
+        piece.colour, piece.name, current_location))
+    print(allowed_moves)
+
+    new_location = allowed_moves[0]
+    board.move_piece(piece, current_location, new_location)
+    current_location = new_location
+    print("Moved the {} to position {}".format(piece.name, new_location))
+    print(board)
+    print("For a {} {} at position {} the moves are:".format(
+        piece.colour, piece.name, current_location))
+    print(piece.allowed_moves(current_location, board))
+
 basic_pawn_test()
 pawn_take_test()
 pawn_en_passant_test()
@@ -392,3 +470,7 @@ basic_bishop_test()
 bishop_take_test()
 
 basic_queen_test()
+
+basic_king_test()
+king_castling_test()
+king_castling_check_test()

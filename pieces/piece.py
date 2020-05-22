@@ -11,6 +11,12 @@ class Piece:
         self.allowed_moves_worker = allowed_moves_worker
         self.moves_made = 0
 
+    def __eq__(self, value):
+        return self.colour == value.colour \
+            and self.name == value.name \
+            and self.points == value.points \
+            and self.moves_made == value.moves_made
+
     def allowed_moves(self, current_location, board):
         return self.allowed_moves_worker(current_location, board)
 
@@ -25,7 +31,7 @@ class Piece:
                 or location.number not in board.numbers.keys():
             return False
         return True
-    
+
     def __remove_moves_with_current_team__(self, moves, board):
         return [move for (move, piece) in
                 [(move, board.get_piece_at_square(move)) for move in moves]

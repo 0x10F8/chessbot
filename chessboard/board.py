@@ -1,4 +1,5 @@
 from chessboard.move_history import HistoryItem
+from pieces.location import Location
 
 
 class Board:
@@ -26,19 +27,42 @@ class Board:
 
     def move_piece(self, piece, from_location, to_location):
         history_item = HistoryItem(piece, from_location, to_location)
-        if self.get_piece_at_square(from_location) is not piece:
+        if self.get_piece_at_square(from_location) != piece:
             raise Exception("The location of the moving piece is incorrect.")
         if to_location.take:
             if self.get_piece_at_square(to_location.take_piece_location) \
-                    is not to_location.take_piece:
+                    != to_location.take_piece:
                 raise Exception(
                     "The take piece does not match the piece in that position.")
             else:
                 self.__remove_piece__(to_location.take_piece_location)
+        if to_location.castle:
+            if self.get_piece_at_square(to_location.castle_piece_location) \
+                    != to_location.castle_piece:
+                raise Exception(
+                    "The castle piece does not match the piece in that position.")
+            else:
+                self.__remove_piece__(to_location.castle_piece_location)
+                self.__add_piece__(to_location.castle_piece,
+                                   self.__calculate_rook_castle_position__(to_location))
+                to_location.castle_piece.moves_made += 1
+
         self.__remove_piece__(from_location)
         self.__add_piece__(piece, to_location)
         self.move_history.append(history_item)
         piece.moves_made += 1
+
+    def __calculate_rook_castle_position__(self, king_to_position):
+        if king_to_position == Location('g', 1):
+            return Location('f', 1)
+        if king_to_position == Location('c', 1):
+            return Location('d', 1)
+        if king_to_position == Location('g', 8):
+            return Location('f', 8)
+        if king_to_position == Location('c', 8):
+            return Location('d', 8)
+        else:
+            raise Exception('Invalid king move castle location.')
 
     def __remove_piece__(self, location):
         location_y_array = self.letters[location.letter]
