@@ -29,3 +29,7 @@ class Location:
         if isinstance(compare, Location):
             return self.letter == compare.letter and self.number == compare.number
         return False
+
+    def __hash__(self):
+        location_string = "{}{}".format(self.letter, self.number)
+        return hash(location_string)

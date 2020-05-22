@@ -1,5 +1,6 @@
 from chessboard.move_history import HistoryItem
 from pieces.location import Location
+from pieces.colour import Colour
 
 
 class Board:
@@ -19,6 +20,8 @@ class Board:
             [None, None, None, None, None, None, None, None]
         ]
         self.move_history = []
+        self.white_piece_locations = {}
+        self.black_piece_locations = {}
 
     def get_piece_at_square(self, location):
         location_y_array = self.letters[location.letter]
@@ -70,6 +73,10 @@ class Board:
         if self.squares[location_x_array][location_y_array] is not None:
             piece_removed = self.squares[location_x_array][location_y_array]
             self.squares[location_x_array][location_y_array] = None
+            if piece_removed.colour == Colour.WHITE:
+                del self.white_piece_locations[location]
+            else:
+                del self.black_piece_locations[location]
             return piece_removed
         else:
             raise Exception("There is no piece at this location.")
@@ -81,6 +88,10 @@ class Board:
             raise Exception("There is already a piece at this location")
         else:
             self.squares[location_x_array][location_y_array] = piece
+            if piece.colour == Colour.WHITE:
+                self.white_piece_locations[location] = piece
+            else:
+                self.black_piece_locations[location] = piece
 
     def __str__(self):
         board_string = ""

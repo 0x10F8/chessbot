@@ -9,7 +9,7 @@ class Knight(Piece):
         super().__init__(colour, "Knight", 3, self.__knight_move_worker__)
 
     def __str__(self):
-        return "{}K".format(str(self.colour)[0])
+        return "{}N".format(str(self.colour)[0])
 
     def __get_all_potential_moves__(self, current_location, board):
         moves = []

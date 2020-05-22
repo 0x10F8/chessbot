@@ -54,13 +54,14 @@ class King(Piece):
 
     def __get_enemy_moves_next_turn__(self, board):
         enemy_moves_next_turn = []
-        for letter in board.letters.keys():
-            for number in board.numbers.keys():
-                board_location = Location(letter, number)
-                piece_at_location = board.get_piece_at_square(board_location)
-                if piece_at_location is not None and piece_at_location.colour != self.colour:
-                    enemy_moves_next_turn += piece_at_location.allowed_moves(
-                        board_location, board)
+        if self.colour == Colour.WHITE:
+            enemy_locations = board.black_piece_locations
+        else:
+            enemy_locations = board.white_piece_locations
+        for board_location, piece_at_location in enemy_locations.items():
+            if piece_at_location.name != self.name:
+                enemy_moves_next_turn += piece_at_location.allowed_moves(
+                    board_location, board)
         return enemy_moves_next_turn
 
     def __non_check_moves__(self, current_location, moves, board):
@@ -105,9 +106,9 @@ class King(Piece):
                     location) for location in blank_squares_left] if piece is not None]
                 if len(pieces_between_king_and_rook) == 0:
                     castling_moves += [Location(left_castle_letter, castle_row,
-                                               castle=True,
-                                               castle_piece=piece_at_left_rook_pos,
-                                               castle_piece_location=left_rook_castle_pos)]
+                                                castle=True,
+                                                castle_piece=piece_at_left_rook_pos,
+                                                castle_piece_location=left_rook_castle_pos)]
             # Right rook still in original position
             piece_at_right_rook_pos = board.get_piece_at_square(
                 right_rook_castle_pos)
@@ -117,9 +118,9 @@ class King(Piece):
                     location) for location in blank_squares_right] if piece is not None]
                 if len(pieces_between_king_and_rook) == 0:
                     castling_moves += [Location(right_castle_letter, castle_row,
-                                               castle=True,
-                                               castle_piece=piece_at_right_rook_pos,
-                                               castle_piece_location=right_rook_castle_pos)]
+                                                castle=True,
+                                                castle_piece=piece_at_right_rook_pos,
+                                                castle_piece_location=right_rook_castle_pos)]
 
         return castling_moves
 
@@ -140,9 +141,8 @@ class King(Piece):
 
         # Check takes
         [self.__check_take__(move, board) for move in moves]
-        
+
         # Remove moves that would put the king in check
         moves = self.__non_check_moves__(current_location, moves, board)
 
-        
         return moves
