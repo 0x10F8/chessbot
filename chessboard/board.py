@@ -60,10 +60,14 @@ class Board:
 
     def __str__(self):
         board_string = ""
+        row_i = 1
         for row in self.squares:
-            board_string = " | ".join(str(square)
-                                     if square is not None else "  " for square in row) + "\n" \
-                                     + board_string
-            board_string = "-----".join("" for square in row) + "\n" + board_string
-        board_string +=  "-----".join("" for square in row) + "\n"
+            board_string = " |".join(" " + str(square)
+                                     if square is not None else "   " for square in row) \
+                + " | {}\n".format(row_i) \
+                + board_string
+            board_string = "_______________________________________\n" + board_string
+            row_i += 1
+        board_string += "_______________________________________\n"
+        board_string += "  A    B    C    D    E    F    G    H  \n"
         return board_string
