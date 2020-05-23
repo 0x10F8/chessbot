@@ -42,6 +42,44 @@ def setup_game_board_worker():
     return board
 
 
-def get_all_next_moves(piece_locations, board):
+def insufficient_material_draw(board):
+    white_piece_locations = board.white_piece_locations
+    black_piece_locations = board.white_piece_locations
+    # king versus king
+    if (len(white_piece_locations) == 1 and len(black_piece_locations)):
+        return True
+    # king and bishop versus king
+    # king and knight versus king
+    # king and bishop versus king and bishop with the bishops on the same color
+    return False
+
+
+def get_all_next_moves(colour, board, calc_king=True):
+    if colour == Colour.WHITE:
+        king_location, king_piece = board.white_king
+        piece_locations = board.white_piece_locations
+    else:
+        king_location, king_piece = board.black_king
+        piece_locations = board.black_piece_locations
+    if calc_king and is_king_in_check(colour, board):
+        return [NextMove(king_piece, king_location, king_piece.allowed_moves(king_location, board))]
     return [move for move in [NextMove(piece, location, piece.allowed_moves(location, board))
-            for (location, piece) in piece_locations.items()] if len(move.moves) > 0]
+                              for (location, piece) in piece_locations.items()] if len(move.moves) > 0]
+
+
+def is_king_in_check(colour, board):
+    if colour == Colour.WHITE:
+        enemy_colour = Colour.BLACK
+        _, king_piece = board.white_king
+    else:
+        enemy_colour = Colour.WHITE
+        _, king_piece = board.black_king
+    next_enemy_moves = get_all_next_moves(enemy_colour, board, calc_king=False)
+    next_enemy_piece_moves = []
+    for next_enemy_move in next_enemy_moves:
+        next_enemy_piece_moves += next_enemy_move.moves
+    king_takes = [enemy_move for enemy_move in next_enemy_piece_moves
+                  if enemy_move.take and enemy_move.take_piece is king_piece]
+    if len(king_takes) > 0:
+        return True
+    return False

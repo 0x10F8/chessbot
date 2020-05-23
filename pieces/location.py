@@ -2,7 +2,8 @@ class Location:
 
     def __init__(self, letter, number,
                  take=False, take_piece=None, take_piece_location=None,
-                 castle=False, castle_piece=None, castle_piece_location=None):
+                 castle=False, castle_piece=None, castle_piece_location=None,
+                 promotion=False, promotion_piece=None):
         self.letter = letter.lower()
         self.number = number
         self.take = take
@@ -11,6 +12,8 @@ class Location:
         self.castle = castle
         self.castle_piece = castle_piece
         self.castle_piece_location = castle_piece_location
+        self.promotion = promotion
+        self.promotion_piece = promotion_piece
 
     def __str__(self):
         location_string = "{}{}".format(self.letter, self.number)
@@ -20,6 +23,9 @@ class Location:
         if self.castle:
             location_string += " castles piece {} at location {}".format(
                 self.castle_piece.name, self.castle_piece_location)
+        if self.promotion:
+            location_string += " promotes to piece {}".format(
+                self.promotion_piece.name)
         return location_string
 
     def __repr__(self):

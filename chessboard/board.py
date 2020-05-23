@@ -22,6 +22,8 @@ class Board:
         self.move_history = []
         self.white_piece_locations = {}
         self.black_piece_locations = {}
+        self.white_king = (None, None)
+        self.black_king = (None, None)
 
     def get_piece_at_square(self, location):
         location_y_array = self.letters[location.letter]
@@ -49,11 +51,13 @@ class Board:
                 self.__add_piece__(to_location.castle_piece,
                                    self.__calculate_rook_castle_position__(to_location))
                 to_location.castle_piece.moves_made += 1
-
         self.__remove_piece__(from_location)
-        self.__add_piece__(piece, to_location)
+        if to_location.promotion:
+            self.__add_piece__(to_location.promotion_piece, to_location)
+        else:
+            self.__add_piece__(piece, to_location)
+            piece.moves_made += 1
         self.move_history.append(history_item)
-        piece.moves_made += 1
 
     def __calculate_rook_castle_position__(self, king_to_position):
         if king_to_position == Location('g', 1):
@@ -90,8 +94,12 @@ class Board:
             self.squares[location_x_array][location_y_array] = piece
             if piece.colour == Colour.WHITE:
                 self.white_piece_locations[location] = piece
+                if piece.name == "King":
+                    self.white_king = (location, piece)
             else:
                 self.black_piece_locations[location] = piece
+                if piece.name == "King":
+                    self.black_king = (location, piece)
 
     def __str__(self):
         board_string = ""

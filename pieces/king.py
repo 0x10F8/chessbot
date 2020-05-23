@@ -62,17 +62,20 @@ class King(Piece):
             if piece_at_location.name != self.name:
                 enemy_moves_next_turn += piece_at_location.allowed_moves(
                     board_location, board)
+            else:
+                king_moves = piece_at_location.__get_all_king_moves__(board_location, board)
+                king_moves = [move for move in king_moves if self.__is_valid_square__(move, board)]
+                [self.__check_take__(move, board) for move in king_moves]
+                enemy_moves_next_turn += king_moves
         return enemy_moves_next_turn
 
     def __non_check_moves__(self, current_location, moves, board):
         non_check_moves = []
         for move in moves:
-            cloned_move = deepcopy(move)
             cloned_board = deepcopy(board)
             cloned_king = cloned_board.get_piece_at_square(current_location)
-            cloned_board.move_piece(cloned_king, current_location, cloned_move)
-            enemy_moves_next_turn = self.__get_enemy_moves_next_turn__(
-                cloned_board)
+            cloned_board.move_piece(cloned_king, current_location, move)
+            enemy_moves_next_turn = self.__get_enemy_moves_next_turn__(cloned_board)
             enemy_king_takes = [
                 enemy_move for enemy_move in enemy_moves_next_turn
                 if enemy_move.take and enemy_move.take_piece is cloned_king]
@@ -127,13 +130,16 @@ class King(Piece):
     def __king_move_worker__(self, current_location, board):
         # Work out all moves
         moves = self.__get_all_king_moves__(current_location, board)
+
         # Remove invalid squares
         moves = [
             move for move in moves if self.__is_valid_square__(move, board)]
+
         # Remove where own pieces exist
         moves = self.__remove_moves_with_current_team__(moves, board)
 
-        enemy_moves_next_turn = self.__get_enemy_moves_next_turn__(board)
+        enemy_moves_next_turn = self.__get_enemy_moves_next_turn__(
+            board)
 
         # Check for castling
         moves += self.__castling_moves__(current_location,
