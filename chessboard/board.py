@@ -8,6 +8,14 @@ class Board:
     letters = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
     numbers = {1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6, 8: 7}
 
+    def clone(self):
+        board = Board()
+        [board.__add_piece__(piece.clone(), location) for location,
+         piece in self.white_piece_locations.items()]
+        [board.__add_piece__(piece.clone(), location) for location,
+         piece in self.black_piece_locations.items()]
+        return board
+
     def __init__(self):
         self.squares = [
             [None, None, None, None, None, None, None, None],

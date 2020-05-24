@@ -11,6 +11,11 @@ class Rook(Piece):
     def __str__(self):
         return "{}R".format(str(self.colour)[0])
 
+    def clone(self):
+        cloned_piece = Rook(self.colour)
+        self.__clone_piece_properties__(cloned_piece)
+        return cloned_piece
+
     def __rook_move_worker__(self, current_location, board):
         moves = []
 
@@ -53,7 +58,7 @@ class Rook(Piece):
                 break
             right_location = Location(self.__get_next_letter__(
                 right_location.letter), current_location.number)
-        
+
         # Leftwards moves
         left_location = Location(self.__get_previous_letter__(
             current_letter), current_location.number)

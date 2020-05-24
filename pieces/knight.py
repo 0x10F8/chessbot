@@ -11,6 +11,11 @@ class Knight(Piece):
     def __str__(self):
         return "{}N".format(str(self.colour)[0])
 
+    def clone(self):
+        cloned_piece = Knight(self.colour)
+        self.__clone_piece_properties__(cloned_piece)
+        return cloned_piece
+
     def __get_all_potential_moves__(self, current_location, board):
         moves = []
         # Black or white doesn't change the moves from the current position

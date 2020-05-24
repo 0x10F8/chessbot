@@ -1,7 +1,8 @@
 from pieces.location import Location
+from abc import ABC, abstractmethod
 
 
-class Piece:
+class Piece(ABC):
 
     def __init__(self, colour, name, points, allowed_moves_worker):
         super().__init__()
@@ -10,6 +11,13 @@ class Piece:
         self.points = points
         self.allowed_moves_worker = allowed_moves_worker
         self.moves_made = 0
+
+    @abstractmethod
+    def clone(self):
+        return NotImplemented
+
+    def __clone_piece_properties__(self, cloned_piece):
+        cloned_piece.moves_made = self.moves_made
 
     def __eq__(self, value):
         return self.colour == value.colour \

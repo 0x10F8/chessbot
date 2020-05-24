@@ -15,6 +15,11 @@ class Queen(Piece):
     def __str__(self):
         return "{}Q".format(str(self.colour)[0])
 
+    def clone(self):
+        cloned_piece = Queen(self.colour)
+        self.__clone_piece_properties__(cloned_piece)
+        return cloned_piece
+
     def __queen_move_worker__(self, current_location, board):
         moves = []
         moves += self.rook.__rook_move_worker__(current_location, board)

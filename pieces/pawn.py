@@ -22,6 +22,11 @@ class Pawn(Piece):
     def __str__(self):
         return "{}P".format(str(self.colour)[0])
 
+    def clone(self):
+        cloned_piece = Pawn(self.colour)
+        self.__clone_piece_properties__(cloned_piece)
+        return cloned_piece
+
     def __promotions__(self, current_location, board):
         moves = []
         if self.colour is Colour.WHITE:

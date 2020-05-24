@@ -1,8 +1,6 @@
 from pieces.location import Location
 from pieces.colour import Colour
 from pieces.piece import Piece
-from copy import deepcopy
-
 
 class King(Piece):
 
@@ -11,6 +9,11 @@ class King(Piece):
 
     def __str__(self):
         return "{}K".format(str(self.colour)[0])
+
+    def clone(self):
+        cloned_piece = King(self.colour)
+        self.__clone_piece_properties__(cloned_piece)
+        return cloned_piece
 
     def __get_directional_move_moves__(self, current_location, board, up=False, down=False, left=False, right=False):
         directions = [up, down, left, right]
@@ -63,24 +66,41 @@ class King(Piece):
                 enemy_moves_next_turn += piece_at_location.allowed_moves(
                     board_location, board)
             else:
-                king_moves = piece_at_location.__get_all_king_moves__(board_location, board)
-                king_moves = [move for move in king_moves if self.__is_valid_square__(move, board)]
+                king_moves = piece_at_location.__get_all_king_moves__(
+                    board_location, board)
+                king_moves = [
+                    move for move in king_moves if self.__is_valid_square__(move, board)]
                 [self.__check_take__(move, board) for move in king_moves]
                 enemy_moves_next_turn += king_moves
         return enemy_moves_next_turn
 
     def __non_check_moves__(self, current_location, moves, board):
         non_check_moves = []
-        for move in moves:
-            cloned_board = deepcopy(board)
-            cloned_king = cloned_board.get_piece_at_square(current_location)
-            cloned_board.move_piece(cloned_king, current_location, move)
-            enemy_moves_next_turn = self.__get_enemy_moves_next_turn__(cloned_board)
+        cloned_board = board.clone()
+        cloned_board.__remove_piece__(current_location)
+        enemy_moves_next_turn = self.__get_enemy_moves_next_turn__(
+            cloned_board)
+        non_take_moves = [move for move in moves if not move.take]
+        for move in non_take_moves:
             enemy_king_takes = [
                 enemy_move for enemy_move in enemy_moves_next_turn
-                if enemy_move.take and enemy_move.take_piece is cloned_king]
+                if enemy_move == move]
             if len(enemy_king_takes) == 0:
                 non_check_moves += [move]
+        remaining_moves = [move for move in moves if move.take] + non_check_moves
+        non_check_moves = []
+        for move in remaining_moves:
+            cloned_board = board.clone()
+            cloned_king = cloned_board.get_piece_at_square(current_location)
+            cloned_board.move_piece(cloned_king, current_location, move)
+            enemy_moves_next_turn = self.__get_enemy_moves_next_turn__(
+                cloned_board)
+            enemy_king_takes = [
+                enemy_move for enemy_move in enemy_moves_next_turn
+                if enemy_move == move]
+            if len(enemy_king_takes) == 0:
+                non_check_moves += [move]
+        
         return non_check_moves
 
     def __castling_moves__(self, current_location, enemy_moves_next_turn, board):

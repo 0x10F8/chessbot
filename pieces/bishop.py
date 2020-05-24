@@ -8,6 +8,11 @@ class Bishop(Piece):
     def __init__(self, colour):
         super().__init__(colour, "Bishop", 3, self.__bishop_move_worker__)
 
+    def clone(self):
+        cloned_piece = Bishop(self.colour)
+        self.__clone_piece_properties__(cloned_piece)
+        return cloned_piece
+        
     def __str__(self):
         return "{}B".format(str(self.colour)[0])
 
